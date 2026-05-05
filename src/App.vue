@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div v-if="!authenticated" class="auth-gate">
     <div class="auth-box">
       <div class="auth-gem">RT</div>
@@ -27,10 +28,21 @@
     </main>
     <AppFooter @navigate="navigate" />
   </template>
+=======
+  <AppNav :current-page="currentPage" @navigate="navigate" />
+  <main>
+    <HomePage v-if="currentPage === 'home'" @navigate="navigate" @view-lifestyle="handleViewLifestyle" />
+    <ExplorerPage v-else-if="currentPage === 'explorer'" @navigate="navigate" />
+    <LifestylePage v-else-if="currentPage === 'insights'" @navigate="navigate" />
+    <AboutPage v-else-if="currentPage === 'about'" />
+  </main>
+  <AppFooter @navigate="navigate" />
+>>>>>>> 75436bb (feat: add location utilities and Vite configuration for API handling)
 </template>
 
 <script setup>
 import { ref } from 'vue'
+<<<<<<< HEAD
 
 const PASS = 'hardstaff@2026'
 const authenticated = ref(sessionStorage.getItem('rti_auth') === '1')
@@ -48,6 +60,8 @@ function tryAuth() {
   }
 }
 
+=======
+>>>>>>> 75436bb (feat: add location utilities and Vite configuration for API handling)
 import AppNav from './components/AppNav.vue'
 import AppFooter from './components/AppFooter.vue'
 import HomePage from './pages/HomePage.vue'
@@ -589,6 +603,7 @@ main {
 .about-card-text { font-size:0.76rem; color:var(--ink2); line-height:1.65; }
 .disclaimer { background:#FFF8E7; border:1px solid #F0D080; border-radius:var(--r2); padding:14px 16px; font-size:0.76rem; color:var(--ink2); line-height:1.6; }
 
+<<<<<<< HEAD
 /* ── AUTH GATE ── */
 .auth-gate {
   min-height:100vh;
@@ -666,6 +681,8 @@ main {
 }
 .auth-btn:hover { background:var(--blue); }
 
+=======
+>>>>>>> 75436bb (feat: add location utilities and Vite configuration for API handling)
 /* ── FOOTER ── */
 footer { background:var(--ink); color:rgba(255,255,255,0.55); }
 .foot-in { display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; padding:32px 24px; }
