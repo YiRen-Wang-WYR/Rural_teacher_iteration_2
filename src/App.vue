@@ -1,16 +1,53 @@
 <template>
-  <AppNav :current-page="currentPage" @navigate="navigate" />
-  <main>
-    <HomePage v-if="currentPage === 'home'" @navigate="navigate" @view-lifestyle="handleViewLifestyle" />
-    <ExplorerPage v-else-if="currentPage === 'explorer'" @navigate="navigate" />
-    <LifestylePage v-else-if="currentPage === 'insights'" @navigate="navigate" />
-    <AboutPage v-else-if="currentPage === 'about'" />
-  </main>
-  <AppFooter @navigate="navigate" />
+  <div v-if="!authenticated" class="auth-gate">
+    <div class="auth-box">
+      <div class="auth-gem">RT</div>
+      <h2 class="auth-title">Rural Teaching Incentive</h2>
+      <p class="auth-sub">Enter the password to continue</p>
+      <form @submit.prevent="tryAuth">
+        <input
+          v-model="passwordInput"
+          type="password"
+          class="auth-input"
+          placeholder="Password"
+          autofocus
+        />
+        <p v-if="authError" class="auth-error">Incorrect password. Please try again.</p>
+        <button type="submit" class="auth-btn">Continue</button>
+      </form>
+    </div>
+  </div>
+  <template v-else>
+    <AppNav :current-page="currentPage" @navigate="navigate" />
+    <main>
+      <HomePage v-if="currentPage === 'home'" @navigate="navigate" @view-lifestyle="handleViewLifestyle" />
+      <ExplorerPage v-else-if="currentPage === 'explorer'" @navigate="navigate" />
+      <LifestylePage v-else-if="currentPage === 'insights'" @navigate="navigate" />
+      <AboutPage v-else-if="currentPage === 'about'" />
+    </main>
+    <AppFooter @navigate="navigate" />
+  </template>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+
+const PASS = 'hardstaff@2026'
+const authenticated = ref(sessionStorage.getItem('rti_auth') === '1')
+const passwordInput = ref('')
+const authError = ref(false)
+
+function tryAuth() {
+  if (passwordInput.value === PASS) {
+    sessionStorage.setItem('rti_auth', '1')
+    authenticated.value = true
+    authError.value = false
+  } else {
+    authError.value = true
+    passwordInput.value = ''
+  }
+}
+
 import AppNav from './components/AppNav.vue'
 import AppFooter from './components/AppFooter.vue'
 import HomePage from './pages/HomePage.vue'
@@ -551,6 +588,83 @@ main {
 .about-card-title { display:flex; align-items:center; gap:8px; font-size:0.84rem; font-weight:700; margin-bottom:8px; }
 .about-card-text { font-size:0.76rem; color:var(--ink2); line-height:1.65; }
 .disclaimer { background:#FFF8E7; border:1px solid #F0D080; border-radius:var(--r2); padding:14px 16px; font-size:0.76rem; color:var(--ink2); line-height:1.6; }
+
+/* ── AUTH GATE ── */
+.auth-gate {
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(150deg,#EBF2FD 0%,var(--bg) 45%,#E5F7EC 100%);
+}
+.auth-box {
+  background:var(--s);
+  border:1px solid var(--b);
+  border-radius:var(--r);
+  box-shadow:var(--sh-lg);
+  padding:36px 32px;
+  width:100%;
+  max-width:360px;
+  text-align:center;
+}
+.auth-gem {
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.75rem;
+  font-weight:700;
+  color:#fff;
+  letter-spacing:-0.02em;
+  margin:0 auto 16px;
+}
+.auth-title {
+  font-family:'Playfair Display',serif;
+  font-size:1.25rem;
+  font-weight:900;
+  margin-bottom:4px;
+}
+.auth-sub {
+  font-size:0.78rem;
+  color:var(--ink2);
+  margin-bottom:20px;
+}
+.auth-input {
+  width:100%;
+  padding:10px 14px;
+  border:1.5px solid var(--b2);
+  border-radius:var(--r2);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.88rem;
+  color:var(--ink);
+  background:var(--bg);
+  outline:none;
+  margin-bottom:10px;
+  transition:border-color 0.13s;
+}
+.auth-input:focus { border-color:var(--blue); }
+.auth-error {
+  font-size:0.72rem;
+  color:var(--red);
+  margin-bottom:8px;
+}
+.auth-btn {
+  width:100%;
+  padding:10px;
+  background:var(--ink);
+  color:#fff;
+  border:none;
+  border-radius:var(--r2);
+  font-family:'DM Sans',sans-serif;
+  font-size:0.84rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:background 0.14s;
+}
+.auth-btn:hover { background:var(--blue); }
 
 /* ── FOOTER ── */
 footer { background:var(--ink); color:rgba(255,255,255,0.55); }
