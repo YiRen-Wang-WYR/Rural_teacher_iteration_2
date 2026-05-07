@@ -6,9 +6,9 @@ export default defineConfig(({ mode }) => {
   const useRemoteApi = Boolean(env.VITE_API_BASE_URL?.trim())
 
   return {
+    base: '/',
     plugins: [vue()],
     server: {
-      // Only proxy when the app uses relative `/api` (no VITE_API_BASE_URL).
       ...(useRemoteApi
         ? {}
         : {
